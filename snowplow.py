@@ -59,15 +59,33 @@ for i in pathList:
             pathList.append(temp)
 
 pathList = delRedundancy(pathList)
-print(pathList)
-print(len(pathList))
+# print(pathList)
+# print(len(pathList))
 
-pathDict = {}
+# pathDict = {}
+# for i in pathList:
+#     pathDict[tuple(i)] = (sumPathWeight(i, G), nx.shortest_path_length(G, base, i[0], 'weight'), nx.shortest_path_length(G, i[-1], base, 'weight'))
 
-for i in pathList:
-    pathDict[tuple(i)] = (sumPathWeight(i, G), nx.shortest_path_length(G, base, i[0], 'weight'), nx.shortest_path_length(G, i[-1], base, 'weight'))
+# print(pathDict)
 
-print(pathDict)
+# we will create states graph here
+# reverse the the list of groups of edges
+goe_list = pathList;
+goe_list.reverse();
+# print(goe_list)
+
+# build dictionary with keys are groups of edges, and values are total costs, include:
+# 1. base -> start point +
+# 2. the sum of length of edges +
+# 3. end point -> base
+goe_dict = {};
+for goe in goe_list:
+    goe_dict[tuple(goe)] = (sumPathWeight(goe, G) + nx.shortest_path_length(G, base, goe[0], 'weight') +
+                          nx.shortest_path_length(G, goe[-1], base, 'weight'))
+
+print(goe_dict)
+
+
 
 
 
