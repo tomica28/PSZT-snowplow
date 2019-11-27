@@ -117,15 +117,47 @@ def get_final_optimal_path(ordered_dict_list):
             acc_edges_list_final.extend(acc_edges_list)
     return optimal_path_dict_final
 
+def build_actual_path_and_total_cost(optimal_path_dict_final):
+    actual_path = base + "->"
+    total_cost = 0
+    for key in optimal_path_dict_final:
+        goe = key
+        cost = optimal_path_dict_final[key]
+        # shortest path from the base to the start-point of goe
+        path_to_start_point = nx.shortest_path(G, base, goe[0], 'weight')
+        # shortest path to the base from the start-point of goe
+        path_from_end_point_to_base = nx.shortest_path(G, goe[-1], base, 'weight')
+        # build actual path
+        for i in range(1, len(path_to_start_point)):
+            actual_path += path_to_start_point[i] + "->"
+
+        for i in range(1, len(goe)):
+            actual_path += goe[i] + "->"
+
+        for i in range(1, len(path_from_end_point_to_base)):
+            actual_path += path_from_end_point_to_base[i] + "->"
+
+        # add the cost of this step to total_cost
+        total_cost += cost
+
+    # trim the last "->"
+    actual_path = actual_path[0:(len(actual_path) - len("->"))]
+
+    return [actual_path, total_cost]
+
 
 #example graph for testing
 G = nx.Graph()
-
-nodes = ['A', 'B', 'C', 'D', 'E', 'F']
-#edges = [('A', 'B', 1), ('B', 'C', 2), ('C', 'D', 4), ('A', 'C', 3), ('A', 'F', 2), ('D', 'F', 3), ('D', 'E', 2), ('E', 'F', 3)]
-edges = [('A', 'B', 5), ('B', 'C', 1), ('C', 'D', 2), ('A', 'C', 2),
-         ('A', 'F', 2), ('D', 'F', 2), ('D', 'E', 1), ('E', 'F', 1)]
-snowPlow = 6
+# nodes = ['A', 'B', 'C', 'D', 'E', 'F']
+# edges = [('A', 'B', 1), ('B', 'C', 2), ('C', 'D', 4), ('A', 'C', 3),
+#          ('A', 'F', 2), ('D', 'F', 3), ('D', 'E', 2), ('E', 'F', 3)]
+# edges = [('A', 'B', 5), ('B', 'C', 1), ('C', 'D', 2), ('A', 'C', 2),
+#          ('A', 'F', 2), ('D', 'F', 2), ('D', 'E', 1), ('E', 'F', 1)]
+nodes = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H']
+edges = [('A', 'B', 4), ('B', 'C', 3), ('C', 'D', 3), ('A', 'C', 8),
+         ('A', 'H', 2), ('C', 'E', 4), ('D', 'E', 5), ('E', 'F', 6),
+         ('E', 'G', 8), ('F', 'G', 6), ('G', 'H', 2)]
+snowPlow = 15
 base = 'A'
 G.add_nodes_from(nodes)
 G.add_weighted_edges_from(edges)
@@ -155,20 +187,21 @@ for i in list_of_goe:
             list_of_goe.append(temp)
 
 list_of_goe = del_redundancy(list_of_goe)
-#print(list_of_goe)
+
+# print(list_of_goe)
 # print(len(list_of_goe))
 
-goe_dict = {}
-for i in list_of_goe:
-    goe_dict[tuple(i)] = (total_weight_of_GoE(i, G), nx.shortest_path_length(G, base, i[0], 'weight'), nx.shortest_path_length(G, i[-1], base, 'weight'))
+# goe_dict = {}
+# for i in list_of_goe:
+#      goe_dict[tuple(i)] = (total_weight_of_GoE(i, G),
+#      nx.shortest_path_length(G, base, i[0], 'weight'),
+#      nx.shortest_path_length(G, i[-1], base, 'weight'))
+# print(goe_dict)
 
-print(goe_dict)
-
-# we will create states graph here
 # reverse the the list of groups of edges
 goe_list = list_of_goe;
 goe_list.reverse();
-#print(goe_list)
+# print(goe_list)
 
 # build dictionary with keys are groups of edges (goe), and values are total costs, include:
 # 1. base -> start point +
@@ -183,7 +216,7 @@ for goe in goe_list:
 # each element of list is a dictionary (GoE, cost) that has the same number of edges
 ordered_dict_list = get_weight_orderd_goe_list(goe_dict)
 
-print(ordered_dict_list)
+# print(ordered_dict_list)
 
 # build the optimal path
 optimal_path_dict_final = get_final_optimal_path(ordered_dict_list)
@@ -192,9 +225,9 @@ optimal_path_dict_final = get_final_optimal_path(ordered_dict_list)
 print(optimal_path_dict_final)
 
 # get actual path and calculate total cost
-# for key in optimal_path_dict_final:
-
-
+[actual_path, total_cost] = build_actual_path_and_total_cost(optimal_path_dict_final)
+print("The optimal path: " + str(actual_path))
+print("Total cost: " + str(total_cost))
 
 
 
