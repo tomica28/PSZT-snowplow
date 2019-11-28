@@ -1,6 +1,15 @@
 import networkx as nx
 import random
 import collections
+import sys
+
+def reading_file(file_name):
+    file = open(file_name, 'r')
+    file_lines = file.readlines()
+    edgeList = []
+    for row in file_lines:
+        edgeList.append((row[0], row[2], int(row[4])))
+    return edgeList
 
 def is_edge_in_GoE(edge, goe):
     for i in range(len(goe) - 1):
@@ -153,14 +162,15 @@ G = nx.Graph()
 #          ('A', 'F', 2), ('D', 'F', 3), ('D', 'E', 2), ('E', 'F', 3)]
 # edges = [('A', 'B', 5), ('B', 'C', 1), ('C', 'D', 2), ('A', 'C', 2),
 #          ('A', 'F', 2), ('D', 'F', 2), ('D', 'E', 1), ('E', 'F', 1)]
-nodes = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H']
-edges = [('A', 'B', 4), ('B', 'C', 3), ('C', 'D', 3), ('A', 'C', 8),
-         ('A', 'H', 2), ('C', 'E', 4), ('D', 'E', 5), ('E', 'F', 6),
-         ('E', 'G', 8), ('F', 'G', 6), ('G', 'H', 2)]
-snowPlow = 15
-base = 'A'
-G.add_nodes_from(nodes)
-G.add_weighted_edges_from(edges)
+#nodes = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H']
+#edges = [('A', 'B', 4), ('B', 'C', 3), ('C', 'D', 3), ('A', 'C', 8),
+#        ('A', 'H', 2), ('C', 'E', 4), ('D', 'E', 5), ('E', 'F', 6),
+#         ('E', 'G', 8), ('F', 'G', 6), ('G', 'H', 2)]
+fileName = sys.argv[1]
+base = sys.argv[2]
+snowPlow = int(sys.argv[3])
+
+G.add_weighted_edges_from(reading_file(fileName))
 
 list_of_goe = []
 
