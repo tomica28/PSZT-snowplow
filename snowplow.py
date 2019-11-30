@@ -1,6 +1,4 @@
 import networkx as nx
-import random
-import collections
 import sys
 
 def reading_file(file_name):
@@ -166,6 +164,9 @@ G = nx.Graph()
 #edges = [('A', 'B', 4), ('B', 'C', 3), ('C', 'D', 3), ('A', 'C', 8),
 #        ('A', 'H', 2), ('C', 'E', 4), ('D', 'E', 5), ('E', 'F', 6),
 #         ('E', 'G', 8), ('F', 'G', 6), ('G', 'H', 2)]
+if len(sys.argv) < 4:
+    print('3 parameters required(graph file, base node, snowplow value)')
+    sys.exit(-1)
 fileName = sys.argv[1]
 base = sys.argv[2]
 snowPlow = int(sys.argv[3])
