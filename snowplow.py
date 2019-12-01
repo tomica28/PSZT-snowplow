@@ -127,6 +127,7 @@ def get_final_optimal_path(ordered_dict_list):
 def build_actual_path_and_total_cost(optimal_path_dict_final):
     actual_path = base + "->"
     total_cost = 0
+    optimal_path_dict_final = dict(sorted(optimal_path_dict_final.items(), key=lambda kv: kv[1]))
     for key in optimal_path_dict_final:
         goe = key
         cost = optimal_path_dict_final[key]
@@ -227,7 +228,7 @@ for goe in goe_list:
 # each element of list is a dictionary (GoE, cost) that has the same number of edges
 ordered_dict_list = get_weight_orderd_goe_list(goe_dict)
 
-# print(ordered_dict_list)
+#print(ordered_dict_list)
 
 # build the optimal path
 optimal_path_dict_final = get_final_optimal_path(ordered_dict_list)
